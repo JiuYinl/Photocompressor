@@ -213,13 +213,13 @@ class ImageCompressorApp:
         self.quality_var = tk.IntVar(value=85)
         self.format_var = tk.StringVar(value="JPEG")
         self.target_size_var = tk.StringVar()
-        self.status_var = tk.StringVar(value="Choose an image to start compressing.")
-        self.original_info_var = tk.StringVar(value="Original: not loaded")
-        self.adjusted_info_var = tk.StringVar(value="Adjusted: -")
-        self.estimated_size_var = tk.StringVar(value="Estimated size: -")
-        self.compression_ratio_var = tk.StringVar(value="Compression ratio: -")
-        self.target_info_var = tk.StringVar(value="Target size: optional, examples 300KB / 1.5MB")
-        self.target_delta_var = tk.StringVar(value="Target delta: -")
+        self.status_var = tk.StringVar(value="请选择一张图片开始压缩。")
+        self.original_info_var = tk.StringVar(value="原图信息：未加载")
+        self.adjusted_info_var = tk.StringVar(value="调整后：-")
+        self.estimated_size_var = tk.StringVar(value="预计大小：-")
+        self.compression_ratio_var = tk.StringVar(value="压缩比例：-")
+        self.target_info_var = tk.StringVar(value="目标大小：可选，例如 300KB / 1.5MB")
+        self.target_delta_var = tk.StringVar(value="目标差值：-")
 
         self.scale_value_var = tk.StringVar(value="100%")
         self.quality_value_var = tk.StringVar(value="85")
@@ -231,7 +231,7 @@ class ImageCompressorApp:
         self._build_ui()
 
     def _build_ui(self) -> None:
-        self.root.title("Image Compressor")
+        self.root.title("图片压缩工具")
         self.root.geometry("1040x760")
         self.root.minsize(900, 660)
 
@@ -242,10 +242,10 @@ class ImageCompressorApp:
         toolbar.grid(row=0, column=0, sticky="ew")
         toolbar.columnconfigure(3, weight=1)
 
-        open_button = ttk.Button(toolbar, text="Open Image", command=self.open_image)
+        open_button = ttk.Button(toolbar, text="选择图片", command=self.open_image)
         open_button.grid(row=0, column=0, padx=(0, 8))
 
-        self.save_button = ttk.Button(toolbar, text="Save As", command=self.save_image, state="disabled")
+        self.save_button = ttk.Button(toolbar, text="另存为", command=self.save_image, state="disabled")
         self.save_button.grid(row=0, column=1, padx=(0, 16))
 
         status_label = ttk.Label(toolbar, textvariable=self.status_var, anchor="w")
@@ -257,11 +257,11 @@ class ImageCompressorApp:
         main_frame.columnconfigure(1, weight=1)
         main_frame.rowconfigure(0, weight=1)
 
-        controls_frame = ttk.LabelFrame(main_frame, text="Compression Settings", padding=16)
+        controls_frame = ttk.LabelFrame(main_frame, text="压缩设置", padding=16)
         controls_frame.grid(row=0, column=0, sticky="nsw", padx=(0, 16))
         controls_frame.columnconfigure(0, weight=1)
 
-        ttk.Label(controls_frame, text="Resolution").grid(row=0, column=0, sticky="w")
+        ttk.Label(controls_frame, text="分辨率").grid(row=0, column=0, sticky="w")
         ttk.Label(controls_frame, textvariable=self.scale_value_var).grid(row=1, column=0, sticky="e")
         scale_slider = tk.Scale(
             controls_frame,
@@ -275,7 +275,7 @@ class ImageCompressorApp:
         )
         scale_slider.grid(row=2, column=0, sticky="ew", pady=(4, 12))
 
-        ttk.Label(controls_frame, text="Quality").grid(row=3, column=0, sticky="w")
+        ttk.Label(controls_frame, text="图片质量").grid(row=3, column=0, sticky="w")
         ttk.Label(controls_frame, textvariable=self.quality_value_var).grid(row=4, column=0, sticky="e")
         quality_slider = tk.Scale(
             controls_frame,
@@ -289,7 +289,7 @@ class ImageCompressorApp:
         )
         quality_slider.grid(row=5, column=0, sticky="ew", pady=(4, 12))
 
-        ttk.Label(controls_frame, text="Output Format").grid(row=6, column=0, sticky="w")
+        ttk.Label(controls_frame, text="输出格式").grid(row=6, column=0, sticky="w")
         format_box = ttk.Combobox(
             controls_frame,
             textvariable=self.format_var,
@@ -299,7 +299,7 @@ class ImageCompressorApp:
         format_box.grid(row=7, column=0, sticky="ew", pady=(4, 12))
         format_box.bind("<<ComboboxSelected>>", self.on_format_changed)
 
-        target_frame = ttk.LabelFrame(controls_frame, text="Target Size", padding=12)
+        target_frame = ttk.LabelFrame(controls_frame, text="目标大小", padding=12)
         target_frame.grid(row=8, column=0, sticky="ew", pady=(0, 12))
         target_frame.columnconfigure(0, weight=1)
 
@@ -309,7 +309,7 @@ class ImageCompressorApp:
 
         self.fit_button = ttk.Button(
             target_frame,
-            text="Fit To Target",
+            text="自动逼近",
             command=self.fit_to_target,
             state="disabled",
         )
@@ -317,7 +317,7 @@ class ImageCompressorApp:
 
         ttk.Label(
             target_frame,
-            text="Examples: 300KB, 1.5MB, 2048B, or 300 (defaults to KB)",
+            text="示例：300KB、1.5MB、2048B，或直接输入 300（默认按 KB 处理）",
             justify=tk.LEFT,
         ).grid(row=1, column=0, columnspan=2, sticky="w", pady=(8, 4))
 
@@ -328,7 +328,7 @@ class ImageCompressorApp:
             row=3, column=0, columnspan=2, sticky="w"
         )
 
-        info_frame = ttk.LabelFrame(controls_frame, text="Image Info", padding=12)
+        info_frame = ttk.LabelFrame(controls_frame, text="图片信息", padding=12)
         info_frame.grid(row=9, column=0, sticky="ew")
         info_frame.columnconfigure(0, weight=1)
 
@@ -345,14 +345,14 @@ class ImageCompressorApp:
             row=3, column=0, sticky="w"
         )
 
-        preview_frame = ttk.LabelFrame(main_frame, text="Preview", padding=16)
+        preview_frame = ttk.LabelFrame(main_frame, text="预览", padding=16)
         preview_frame.grid(row=0, column=1, sticky="nsew")
         preview_frame.columnconfigure(0, weight=1)
         preview_frame.rowconfigure(0, weight=1)
 
         self.preview_label = ttk.Label(
             preview_frame,
-            text="The compressed preview will appear here.",
+            text="这里会显示压缩后的预览图。",
             anchor="center",
             justify=tk.CENTER,
         )
@@ -360,10 +360,10 @@ class ImageCompressorApp:
 
     def open_image(self) -> None:
         file_path = filedialog.askopenfilename(
-            title="Choose an image",
+            title="选择图片",
             filetypes=[
-                ("Image files", "*.jpg *.jpeg *.png *.webp *.bmp"),
-                ("All files", "*.*"),
+                ("图片文件", "*.jpg *.jpeg *.png *.webp *.bmp"),
+                ("所有文件", "*.*"),
             ],
         )
         if not file_path:
@@ -373,7 +373,7 @@ class ImageCompressorApp:
         try:
             loaded_image = self.processor.load_image(path)
         except Exception as exc:
-            messagebox.showerror("Open failed", f"Could not read the image:\n{exc}")
+            messagebox.showerror("打开失败", f"无法读取图片：\n{exc}")
             return
 
         self.source_path = path
@@ -382,9 +382,9 @@ class ImageCompressorApp:
         self.current_result = None
 
         self.original_info_var.set(
-            f"Original: {loaded_image.width} x {loaded_image.height} | {format_bytes(self.source_size_bytes)}"
+            f"原图信息：{loaded_image.width} x {loaded_image.height} | {format_bytes(self.source_size_bytes)}"
         )
-        self.status_var.set(f"Loaded: {path.name}")
+        self.status_var.set(f"已加载：{path.name}")
         if self.save_button is not None:
             self.save_button.configure(state="normal")
         if self.fit_button is not None:
@@ -394,21 +394,21 @@ class ImageCompressorApp:
 
     def save_image(self) -> None:
         if self.source_path is None or self.current_result is None:
-            messagebox.showwarning("Cannot save", "Open an image and wait for the preview first.")
+            messagebox.showwarning("无法保存", "请先选择图片，并等待预览生成完成。")
             return
 
         output_format = self.current_settings().output_format
         suffix = ".jpg" if output_format == "JPEG" else ".webp"
-        default_name = f"{self.source_path.stem}_compressed{suffix}"
+        default_name = f"{self.source_path.stem}_压缩后{suffix}"
 
         target_path = filedialog.asksaveasfilename(
-            title="Save As",
+            title="另存为",
             defaultextension=suffix,
             initialfile=default_name,
             filetypes=[
-                ("JPEG image", "*.jpg *.jpeg"),
-                ("WebP image", "*.webp"),
-                ("All files", "*.*"),
+                ("JPEG 图片", "*.jpg *.jpeg"),
+                ("WebP 图片", "*.webp"),
+                ("所有文件", "*.*"),
             ],
         )
         if not target_path:
@@ -417,30 +417,30 @@ class ImageCompressorApp:
         try:
             Path(target_path).write_bytes(self.current_result.encoded_bytes)
         except Exception as exc:
-            messagebox.showerror("Save failed", f"Could not save the file:\n{exc}")
+            messagebox.showerror("保存失败", f"无法保存文件：\n{exc}")
             return
 
         actual_size = len(self.current_result.encoded_bytes)
-        self.status_var.set(f"Saved: {Path(target_path).name}")
+        self.status_var.set(f"已保存：{Path(target_path).name}")
         messagebox.showinfo(
-            "Saved",
-            f"File saved to:\n{target_path}\n\nFinal size: {format_bytes(actual_size)}",
+            "保存成功",
+            f"文件已保存到：\n{target_path}\n\n最终大小：{format_bytes(actual_size)}",
         )
 
     def fit_to_target(self) -> None:
         if self.source_image is None:
-            messagebox.showwarning("No image", "Open an image before fitting to a target size.")
+            messagebox.showwarning("未选择图片", "请先选择图片，再使用目标大小自动逼近。")
             return
 
         target_bytes = parse_target_size(self.target_size_var.get())
         if target_bytes is None:
             messagebox.showwarning(
-                "Invalid target size",
-                "Enter a value like 300KB, 1.5MB, 2048B, or 300.",
+                "目标大小无效",
+                "请输入例如 300KB、1.5MB、2048B，或直接输入 300。",
             )
             return
 
-        self.status_var.set("Searching for the closest match...")
+        self.status_var.set("正在寻找最接近目标大小的组合……")
         self.root.update_idletasks()
 
         candidate = self.processor.find_closest_settings(
@@ -462,7 +462,7 @@ class ImageCompressorApp:
                 preview_image=self.processor._create_preview_image_from_bytes(candidate.encoded_bytes),
                 encoded_bytes=candidate.encoded_bytes,
             ),
-            status_message="Closest target match applied.",
+            status_message="已应用最接近目标大小的参数组合。",
         )
 
     def on_slider_changed(self, _value: str) -> None:
@@ -496,11 +496,11 @@ class ImageCompressorApp:
         try:
             result = self.processor.build_processed_image(self.source_image, self.current_settings())
         except Exception as exc:
-            self.status_var.set("Preview update failed.")
-            messagebox.showerror("Processing failed", f"Could not generate preview:\n{exc}")
+            self.status_var.set("预览更新失败。")
+            messagebox.showerror("处理失败", f"无法生成预览：\n{exc}")
             return
 
-        self.apply_result(result, status_message="Preview updated. You can save the file now.")
+        self.apply_result(result, status_message="预览已更新，现在可以另存为。")
 
     def apply_result(self, result: ProcessedImageResult, status_message: str) -> None:
         if self.preview_label is None:
@@ -510,13 +510,13 @@ class ImageCompressorApp:
         self.preview_label.configure(image=result.preview_image, text="")
         self.preview_label.image = result.preview_image
 
-        self.adjusted_info_var.set(f"Adjusted: {result.width} x {result.height}")
-        self.estimated_size_var.set(f"Estimated size: {format_bytes(result.estimated_bytes)}")
+        self.adjusted_info_var.set(f"调整后：{result.width} x {result.height}")
+        self.estimated_size_var.set(f"预计大小：{format_bytes(result.estimated_bytes)}")
 
         ratio = (result.estimated_bytes / self.source_size_bytes) if self.source_size_bytes else 0.0
         reduction = max(0.0, 1.0 - ratio)
         self.compression_ratio_var.set(
-            f"Compression ratio: {ratio * 100:.1f}% of original | reduced by {reduction * 100:.1f}%"
+            f"压缩比例：约为原图的 {ratio * 100:.1f}% | 体积减少 {reduction * 100:.1f}%"
         )
 
         self.update_target_info()
@@ -526,20 +526,20 @@ class ImageCompressorApp:
         target_bytes = parse_target_size(self.target_size_var.get())
         if target_bytes is None:
             if self.target_size_var.get().strip():
-                self.target_info_var.set("Target size: invalid input")
+                self.target_info_var.set("目标大小：输入格式无效")
             else:
-                self.target_info_var.set("Target size: optional, examples 300KB / 1.5MB")
-            self.target_delta_var.set("Target delta: -")
+                self.target_info_var.set("目标大小：可选，例如 300KB / 1.5MB")
+            self.target_delta_var.set("目标差值：-")
             return
 
-        self.target_info_var.set(f"Target size: {format_bytes(target_bytes)}")
+        self.target_info_var.set(f"目标大小：{format_bytes(target_bytes)}")
         if self.current_result is None:
-            self.target_delta_var.set("Target delta: load an image to compare")
+            self.target_delta_var.set("目标差值：请选择图片后再比较")
             return
 
         delta = self.current_result.estimated_bytes - target_bytes
         sign = "+" if delta >= 0 else "-"
-        self.target_delta_var.set(f"Target delta: {sign}{format_bytes(abs(delta))}")
+        self.target_delta_var.set(f"目标差值：{sign}{format_bytes(abs(delta))}")
 
     def current_output_format(self) -> OutputFormat:
         output_format = self.format_var.get()
