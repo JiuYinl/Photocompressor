@@ -4,10 +4,7 @@
 
 > 📥 **[下载 ImageCompressor.exe](https://github.com/JiuYinl/Photocompressor/releases/latest)** —— 双击即用，无需安装 Python。
 
-<!-- 截图放 assets/ 目录，用相对路径引用，例如：
 ![主界面](assets/screenshot_main.png)
-![压缩前后对比](assets/screenshot_compare.png)
--->
 
 ## 功能
 
